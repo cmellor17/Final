@@ -9,7 +9,7 @@ import requests
 from PIL import Image, ImageDraw, ImageFont, ImageTk
 
 
-class GelQuantGUI(TkinterDnD.Tk):
+class GelGUI(TkinterDnD.Tk):
     """GUI for SDS-PAGE gel quantification."""
 
     def __init__(self):
@@ -532,7 +532,7 @@ class GelQuantGUI(TkinterDnD.Tk):
             self.save_path.set(path)
 
     def detect_boundaries(self):
-        """Compute interior lane boundary x-coordinates via intensity profile NMS, ignoring 5% edges."""
+        """Compute interior lane boundary x-coordinates via intensity, ignoring 5% of either side."""
         if not self.current_image:
             return
         w, h = self.current_image.size
@@ -558,7 +558,7 @@ class GelQuantGUI(TkinterDnD.Tk):
         self.boundaries = sorted(boundaries)
 
     def calibrate_ladder(self):
-        """Open a window to click green (25 kDa) then red (75 kDa) bands."""
+        """Open a window to click green (25 kDa) and red (75 kDa) bands."""
         if not self.current_image:
             messagebox.showerror("Error", "Load image first!")
             return
@@ -788,5 +788,5 @@ class GelQuantGUI(TkinterDnD.Tk):
 
 
 if __name__ == "__main__":
-    app = GelQuantGUI()
+    app = GelGUI()
     app.mainloop()
