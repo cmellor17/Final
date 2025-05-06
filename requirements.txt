@@ -1,0 +1,5 @@
+numpy==2.2.5
+pandas==2.2.3
+Pillow==11.2.1
+Requests==2.32.3
+tkinterdnd2==0.4.3

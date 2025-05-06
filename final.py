@@ -222,7 +222,7 @@ class GelGUI(TkinterDnD.Tk):
         self.on_lanes_change()
 
     def _build_ladder_type_section(self):
-        """Add ladder-type selector: SDS-PAGE vs Agarose."""
+        """Add ladder selector: SDS-PAGE vs Agarose."""
         frame = tk.LabelFrame(
             self.main_frame,
             text="3) Ladder Type",
@@ -280,7 +280,7 @@ class GelGUI(TkinterDnD.Tk):
             self.undo_stack.append(self.current_image.copy())
 
     def undo(self):
-        """Revert to previous image state."""
+        """Revert to previous image."""
         if self.undo_stack:
             self.current_image = self.undo_stack.pop()
             self.edited_base = self.current_image.copy()
@@ -483,7 +483,7 @@ class GelGUI(TkinterDnD.Tk):
             self.fill_labels(labels)
 
     def fill_labels(self, labels):
-        """Populate lane entries from label list."""
+        """Fill lane entries from label list."""
         self.lanes_var.set(len(labels))
         self.on_lanes_change()
         for idx, (lab, mw) in enumerate(labels):
@@ -545,7 +545,7 @@ class GelGUI(TkinterDnD.Tk):
         # find candidate peaks (brightest columns)
         candidates_rel = np.argsort(-trimmed)
         candidates = [i + edge for i in candidates_rel]
-        # select only interior dividers: one less than lane count
+        # select only interior dividers, one less than lane count
         n = len(self.lane_widgets)
         num_dividers = max(n - 1, 0)
         min_dist = max(2, int(w / (2 * n)))
@@ -630,7 +630,7 @@ class GelGUI(TkinterDnD.Tk):
         w, h = img.size
         n = len(lanes)
 
-        # 1) detect lane boundaries once
+        # 1) detect lane boundaries
         self.detect_boundaries()
         boundaries = self.boundaries or []
         draw = ImageDraw.Draw(img)
@@ -638,14 +638,14 @@ class GelGUI(TkinterDnD.Tk):
         # draw interior dividers
         for x in boundaries:
             draw.line((x, 0, x, h), fill='black', width=div_w)
-        # optionally extend last boundary for visual closure
+        # extend last boundary for visual closure
         if len(boundaries) >= 2:
             right = boundaries[-1]
             prev = boundaries[-2]
             ext = right + (right - prev)
             draw.line((ext, 0, ext, h), fill='black', width=div_w)
 
-        # 2) label wrapping and font sizing unchanged
+        # 2) label wrapping
         lane_w = w / n
         wrapped, max_chars = [], 1
         for lane in lanes:
@@ -676,7 +676,7 @@ class GelGUI(TkinterDnD.Tk):
         out.paste(img, (0, 0))
         draw = ImageDraw.Draw(out)
 
-        # 4) compute lane midpoints including edges
+        # 4) calc lane midpoints including edges
         full_bounds = [0] + boundaries + [w]
         mids = [(full_bounds[i] + full_bounds[i + 1]) //
                 2 for i in range(len(full_bounds) - 1)]
